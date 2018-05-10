@@ -74,9 +74,9 @@ Optimization
 Once we have our model
 - Compare my model's output with scikit-learn's L2-regularized logistic regression
 
-Model's accuracy:
-Model's precision:
-Model's recall:
+Model's accuracy: 78.3%
+Model's precision: 0.00%
+Model's recall: 0.00%
 
 
 ## Data Format
