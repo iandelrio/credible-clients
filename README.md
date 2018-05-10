@@ -32,6 +32,7 @@ Here are the things you should do:
 3. Ensure you see the model's accuracy/precision/recall scores printed when running `python main.py`.
 4. Replace the placeholder code in [`model.py`](model.py) with your own model.
 5. Fill in the "write-up" section below in your forked copy of the README.
+6. Submit a publicly viewable link to your forked repo in the application form
 
 _Good luck, and have fun with this_! :rocket:
 
@@ -40,6 +41,42 @@ _Good luck, and have fun with this_! :rocket:
 
 Give a brief summary of the approach you took, and why! Include your model's
 accuracy/precision/recall scores as well!
+
+Disclaimer:
+Since the instructions specified that most of the work should be done in model.py, I abstained from doing
+any pre-processing and feature engineering in main.py, such as one-hot-encoding to get categorical data from
+discrete numerical data, and standardizing features.
+I also abstained from doing hyperparameter optimization, which I would have done using GridSearchCV.
+I also abstained from using cross validation (cross_val_predict) to decrease approximation error,
+  and thus to avoid overfitting.
+
+Model
+- Since this is a binary classification problem, we will implement logistic regression with L2-regularization
+    - The paper “Do we Need Hundreds of Classifiers to Solve Real World Classification Problems?” by
+      Fernandez-Delgado et al. [2014] concludes that Random Forests and SVMs are the best
+      out-of-the-box classifiers
+    - However, we chose Logistic Regression because
+        1. it gives us smoother predictions than Random Forests, and
+        2. its loss function is easier to minimize than SVM's (logistic loss is smooth,
+           whereas hinge loss is not)
+    - We will use L2-regularization to regularize our weights
+        - We chose L2-regularization over L1-regularization because features selection is unnecessary with
+          such a small amount of features (23 features for 22,500 training examples)
+        - We will use the Akaike information criterion for regularization, i.e. regularization term = 1, for
+          the sake of simplicity.
+
+Optimization
+- Optimize using gradient descent
+    - Less than 100,000 training samples, so according to [scikit-learn's "Choosing the right estimator" guide](http://scikit-learn.org/stable/tutorial/machine_learning_map/index.html),
+      no need to do stochastic gradient descent
+    - We will do gradient descent with a constant step-size of 1, for simplicity's sake.
+
+Once we have our model
+- Compare my model's output with scikit-learn's L2-regularized logistic regression
+
+Model's accuracy:
+Model's precision:
+Model's recall:
 
 
 ## Data Format

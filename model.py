@@ -2,13 +2,29 @@ import numpy as np
 
 
 class CreditModel:
-    def __init__(self):
+    def __init__(self, regularization = 1, numIterations = 100):
         """
         Instantiates the model object, creating class variables if needed.
         """
+        self.regularization = regularization
+        self.numIterations = numIterations
 
-        # TODO: Initialize your model object.
-        pass
+    def calcfg(self, w, X_train, y_train):
+
+        yXw = y_train * X_train.dot(w)
+
+        regTermF = (self.regularization / 2) * (w.T @ w)
+
+        regTermG = self.regularization * w
+
+        # Calculate the loss
+        f = np.sum(np.log(1. + np.exp(-yXw))) + regTermF
+
+        # Calculate the gradient value
+        res = - y_train / (1. + np.exp(yXw))
+        g = X_train.T.dot(res) + regTermG
+
+        return f, g
 
     def fit(self, X_train, y_train):
         """
@@ -17,9 +33,28 @@ class CreditModel:
         You should somehow manipulate and store this data to your model class
         so that you can make predictions on new testing data later on.
         """
+        n, d = X_train.shape
+        self.w = np.ones(d)
 
-        # TODO: Fit your model based on the given X and y.
-        pass
+        f, g = self.calcfg(self.w, X_train, y_train)
+        iterationsSoFar = 1
+
+        alpha = 1.
+        while True:
+
+            w_new = self.w - alpha * g
+
+            f_new, g_new = self.calcfg(w_new, X_train, y_train)
+
+            iterationsSoFar += 1
+
+            # Update parameters/function/gradient
+            self.w = w_new
+            g = g_new
+
+            if iterationsSoFar >= self.numIterations:
+                break
+
 
     def predict(self, X_test):
         """
@@ -29,5 +64,8 @@ class CreditModel:
         fitting phase to make your prediction on this new testing data.
         """
 
-        # TODO: Predict on `X_test` based on what you learned in the fit phase.
-        return np.random.randint(2, size=len(X_test))
+        # y_rand = np.random.randint(2, size=len(X_test))
+        # y_rand[y_rand == 0] = -1
+        # return y_rand
+
+        return np.sign(X_test @ self.w).astype(int)
